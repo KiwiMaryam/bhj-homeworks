@@ -18,20 +18,23 @@ class Game {
 
   registerEvents() {
     document.addEventListener('keydown', (event) => {
-      // Получаем текущий символ
-      this.currentSymbol = this.symbols[0].textContent;
+        // Получаем текущий символ
+        this.currentSymbol = this.wordElement.querySelector('.symbol_current');
 
-      // Получаем введенный символ и приводим к нижнему регистру для сравнения
-      const inputSymbol = event.key.toLowerCase();
+        // Проверяем, что текущий символ существует
+        if (!this.currentSymbol) return;
 
-      // Сравниваем символы
-      if (inputSymbol === this.currentSymbol.toLowerCase()) {
-          this.success();
-      } else {
-          this.fail();
-      }
-  });
-  }
+        // Получаем введенный символ и приводим к нижнему регистру для сравнения
+        const inputSymbol = event.key.toLowerCase();
+
+        // Сравниваем символы
+        if (inputSymbol === this.currentSymbol.textContent.toLowerCase()) {
+            this.success();
+        } else {
+            this.fail();
+        }
+    });
+}
 
   success() {
     if(this.currentSymbol.classList.contains("symbol_current")) this.currentSymbol.classList.remove("symbol_current");
