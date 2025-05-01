@@ -4,26 +4,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const tasksForm = document.getElementById('tasks__form');
 
     function createTask(title) {
-        const taskElement = document.createElement('div');
-        taskElement.classList.add('task');
+        tasksList.insertAdjacentHTML('afterbegin', `
+            <div class="task">
+                <div class="task__title">${title}</div>
+                <a href="#" class="task__remove">&times;</a>
+            </div>
+        `);
 
-        const taskTitle = document.createElement('div');
-        taskTitle.classList.add('task__title');
-        taskTitle.textContent = title;
-
-        const removeButton = document.createElement('a');
-        removeButton.href = '#';
-        removeButton.classList.add('task__remove');
-        removeButton.innerHTML = '&times;';
-
+        // Получаем только что добавленный элемент
+        const removeButton = tasksList.querySelector('.task__remove');
         removeButton.addEventListener('click', function(event) {
             event.preventDefault();
-            tasksList.removeChild(taskElement);
+            tasksList.removeChild(removeButton.parentElement);
         });
-
-        taskElement.appendChild(taskTitle);
-        taskElement.appendChild(removeButton);
-        tasksList.appendChild(taskElement);
     }
 
     tasksForm.addEventListener('submit', function(event) {
@@ -33,17 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (taskTitle) {
             createTask(taskTitle);
             taskInput.value = '';
-        }
-    });
-
-    taskInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const taskTitle = taskInput.value.trim();
-            if (taskTitle) {
-                createTask(taskTitle);
-                taskInput.value = '';
-            }
         }
     });
 });

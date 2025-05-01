@@ -1,27 +1,37 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const tooltipTrigger = document.querySelector('.has-tooltip');
+    const tooltipTriggers = document.querySelectorAll('.has-tooltip');
     const tooltip = document.querySelector('.tooltip');
 
-    tooltipTrigger.addEventListener('click', function(event) {
-        event.preventDefault();
+    tooltipTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function(event) {
+            event.preventDefault();
 
-        if (tooltip.classList.contains('tooltip_active')) {
-            tooltip.classList.remove('tooltip_active');
-            return;
-        }
+            // Скрываем подсказку, если она уже активна
+            if (tooltip.classList.contains('tooltip_active')) {
+                tooltip.classList.remove('tooltip_active');
+                return;
+            }
 
-        const tooltipText = tooltipTrigger.getAttribute('title');
-        tooltip.textContent = tooltipText;
+            // Получаем текст подсказки из атрибута title
+            const tooltipText = trigger.getAttribute('title');
+            tooltip.textContent = tooltipText;
 
-        const rect = tooltipTrigger.getBoundingClientRect();
-        tooltip.style.left = `${rect.left + window.scrollX}px`;
-        tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
+            // Позиционирование подсказки
+            const rect = trigger.getBoundingClientRect();
+            tooltip.style.left = `${rect.left + window.scrollX}px`;
+            tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
 
-        tooltip.classList.add('tooltip_active');
+            // Показываем подсказку
+            tooltip.classList.add('tooltip_active');
+        });
     });
 
     document.addEventListener('click', function(event) {
-        if (!tooltipTrigger.contains(event.target) && !tooltip.contains(event.target)) {
+        // Закрываем подсказку, если кликнули вне элемента или подсказки
+        const isClickInsideTooltip = tooltip.contains(event.target);
+        const isClickInsideTrigger = Array.from(tooltipTriggers).some(trigger => trigger.contains(event.target));
+
+        if (!isClickInsideTrigger && !isClickInsideTooltip) {
             tooltip.classList.remove('tooltip_active');
         }
     });

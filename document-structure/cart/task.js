@@ -29,21 +29,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 const cartProductCount = cartProduct.querySelector('.cart__product-count');
                 cartProductCount.textContent = parseInt(cartProductCount.textContent) + quantity;
             } else {
-                const newCartProduct = document.createElement('div');
-                newCartProduct.className = 'cart__product';
-                newCartProduct.dataset.id = productId;
-
-                const productImageElement = document.createElement('img');
-                productImageElement.className = 'cart__product-image';
-                productImageElement.src = productImage;
-
-                const productCountElement = document.createElement('div');
-                productCountElement.className = 'cart__product-count';
-                productCountElement.textContent = quantity;
-
-                newCartProduct.appendChild(productImageElement);
-                newCartProduct.appendChild(productCountElement);
-                cartList.appendChild(newCartProduct);
+                cartList.insertAdjacentHTML('beforeend', `
+                    <div class="cart__product" data-id="${productId}">
+                        <img class="cart__product-image" src="${productImage}" alt="Product Image">
+                        <div class="cart__product-count">${quantity}</div>
+                        <a href="#" class="cart__product-remove">&times;</a>
+                    </div>
+                `);
+                
+                // Добавляем обработчик для кнопки удаления
+                const removeButton = cartList.querySelector(`.cart__product[data-id="${productId}"] .cart__product-remove`);
+                removeButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    cartList.removeChild(removeButton.closest('.cart__product'));
+                });
             }
         });
     });
